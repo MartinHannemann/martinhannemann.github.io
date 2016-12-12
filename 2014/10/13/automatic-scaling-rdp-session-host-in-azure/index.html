@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="I am moving a customer from a traditional hosting provider to Microsoft Azure. They have a traditional setup with ADDS, file servers and a RDP Session host. In their current setup they complain about performance, so i wanted to test out if we could run some kind of scaling in Azure based on time or usage.">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Martin Hannemann">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="RDP Automatic scaling in Azure"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="rtin.hm"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>RDP Automatic scaling in Azure - rtin.hm</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">rtin.hm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/klugjo/hexo-theme-clean-blog">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>RDP Automatic scaling in Azure</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2014-10-13
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Azure/">Azure</a>
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>I am moving a customer from a traditional hosting provider to Microsoft Azure. They have a traditional setup with ADDS, file servers and a RDP Session host. In their current setup they complain about performance, so i wanted to test out if we could run some kind of scaling in Azure based on time or usage.</p>
+<a id="more"></a>
+<p>A quick search on Google sent me towards a <a href="https://gallery.technet.microsoft.com/scriptcenter/Automatic-Scaling-of-9b4f5e76" target="_blank" rel="external">Technet script</a> promising the features i was after. Let’s test it out.</p>
+<p>You will need:</p>
+<ul>
+<li>An active Azure Subscription</li>
+<li>An ADDS setup</li>
+<li>A RDP Broker</li>
+<li>Minimum 2 RDP session servers<br>When you are done, you should end up with something like this:</li>
+</ul>
+<p><a href="/images/2015/02/1.png"><img src="/images/2015/02/1-300x165.png" alt="1"></a></p>
+<p>I have configured a Fileserver to host the User Profile Disks, a server to host the Broker and web access RDP roles and two servers to host the session host roles.</p>
+<h1 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h1><p>The script is executed as a scheduled task on the RDP Broker server.</p>
+<p><a href="/images/2015/02/2.png"><img src="/images/2015/02/2-300x179.png" alt="2"></a></p>
+<p>It will turn on/off the Session Hosts, not delete them, so there will still be a very small cost for the VM’s when they are not being used. As we all know we do not pay for compute when a server is turned off (deallocated).</p>
+<h1 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h1><p>I start with configuring the Connection Broker, as it will serve as the controller of operations.</p>
+<h3 id="Script-setup"><a href="#Script-setup" class="headerlink" title="Script setup"></a>Script setup</h3><p>First we need to download and extract the <a href="https://gallery.technet.microsoft.com/scriptcenter/Automatic-Scaling-of-9b4f5e76" target="_blank" rel="external">Automatic Scaling</a> script to <code>c:DynamicRDSH</code> or whatever folder you want.</p>
+<p>Open the config.xml</p>
+<p><a href="/images/2015/02/3.png"><img src="/images/2015/02/3-300x174.png" alt="3"></a></p>
+<p>Unfortunately, there is an error in the config.xml file, i have provided a fixed version here:</p>
+<p><pre class="lang:default decode:true ">&lt;?xml version=”1.0” encoding=”UTF-8”?&gt;<br>&lt;RDSScale&gt;<br>  &lt;Azure&gt;<br>    &lt;Variable Name=”AzurePublishSettingFile” Value=”INSERT PATH TO PUBLISH FILE”/&gt;<br>    &lt;Variable Name=”CurrentAzureSubscriptionName” Value=”INSERT SUBSCRIPTION”/&gt;<br>    &lt;Variable Name=”CloudServiceName” Value=”INSERT CLOUD SERVICE”/&gt;<br>  &lt;/Azure&gt;<br>  &lt;RDSScaleSettings&gt;<br>    &lt;Variable Name=”BeginPeakTime” Value=”08:00:00”/&gt;<br>    &lt;Variable Name=”EndPeakTime” Value=”17:00:00”/&gt;<br>    &lt;Variable Name=”TimeDifferenceInHours” Value=”+1” /&gt;<br>    &lt;Variable Name=”SessionThresholdPerCPU” Value=”3”/&gt;<br>    &lt;Variable Name=”MinimumNumberOfRDSH” Value=”1”/&gt;<br>    &lt;Variable Name=”LimitSecondsToForceLogOffUser” Value=”120”/&gt;<br>    &lt;Variable Name=”LogOffMessageTitle” Value=”System Under Maintenance”/&gt;<br>    &lt;Variable Name=”LogOffMessageBody” Value=”Please save your work and logoff!”/&gt;<br>  &lt;/RDSScaleSettings&gt;<br>&lt;/RDSScale&gt;</pre><br>&nbsp;</p>
+<p>Change the location of your AzurePublishSettingFile, Azure Subscription and the cloud service to the one your servers are running in.</p>
+<h3 id="Connecting-to-Azure"><a href="#Connecting-to-Azure" class="headerlink" title="Connecting to Azure"></a>Connecting to Azure</h3><p>To install Azure Powershell simply use this <a href="http://go.microsoft.com/fwlink/p/?LinkID=320376" target="_blank" rel="external">Link</a>. Unfortunately, the platform installer installs a bunch of unnecessary programs<br><a href="/images/2015/02/4.png"><img src="/images/2015/02/4-300x190.png" alt="4"></a></p>
+<p>Which, if you are like me, you uninstall.</p>
+<p><a href="/images/2015/02/5.png"><img src="/images/2015/02/5-300x188.png" alt="5"></a></p>
+<p>Now we need to establish the connection to our Azure Subscription, thankfully, this is really simple. First you run</p>
+<p><pre class="lang:ps decode:true ">Get-AzurePublishSettingsFile</pre><br>&nbsp;</p>
+<p>This will open up a browser and ask for your credentials, input these and when asked, save the file in your <code>c:DynamicRDSH</code> folder</p>
+<p><a href="/images/2015/02/6.png"><img src="/images/2015/02/6-300x180.png" alt="6"></a></p>
+<p>Next import the PublishSettingsFile with</p>
+<p><pre class="lang:ps decode:true ">Import-AzurePublishSettingsFile -PublishSettingsFile</pre><br>&nbsp;</p>
+<p><a href="/images/2015/02/7.png"><img src="/images/2015/02/7-300x227.png" alt="7"></a></p>
+<p>Now we will be able to run commands agains Azure from this server. When we are in Powershell we need to run these commands in order for the script to work.</p>
+<p>Since the script is not signed we need to allow for all scripts to run.</p>
+<p><pre class="lang:ps decode:true ">Set-ExecutionPolicy -ExecutionPolicy Unrestricted</pre><br>We also need to unblock the script.</p>
+<p><pre class="lang:ps decode:true ">Unblock-File .RDSScaler.ps1</pre><br>Setup schedule</p>
+<p>Next we need to setup the scheduled task that will probe the session host to see if they need scaling.</p>
+<p>Create a new task and name it whatever you like and make sure you have selected <code>Run Whether user is logged on or not</code> and <code>Run with highest privileges</code></p>
+<p><a href="/images/2015/02/8.png"><img src="/images/2015/02/8-300x226.png" alt="8"></a></p>
+<p>Select Triggers and create one that repeats every 15 minutes for indefinitely. If you have a small or very large enviroment you could choose to lower this setting, anything lower than 15 minutes will not allow for Azure to complete its operations.</p>
+<p><a href="/images/2015/02/9.png"><img src="/images/2015/02/9-300x259.png" alt="9"></a></p>
+<p>Select Actions and enter <code>powershell.exe c:dynamicrdshrdsscaler.ps1</code></p>
+<p><a href="/images/2015/02/10.png"><img src="/images/2015/02/10-274x300.png" alt="10"></a></p>
+<p>When done you should see something like this</p>
+<p><a href="/images/2015/02/11.png"><img src="/images/2015/02/11-300x159.png" alt="11"></a></p>
+<h3 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h3><p>I was a little curious so i ran the script to see what would happen</p>
+<p><a href="/images/2015/02/12.png"><img src="/images/2015/02/12-300x253.png" alt="12"></a></p>
+<p>It detected that it was off-hours and noticed i had 2 sessions host running and no active sessions, so it turned off a session host.</p>
+<p>RDSScale.log</p>
+<pre><code>10/13/2014 11:54:01 AM - [Info] Starting RDS Scale Optimization: Current Date Time is: 10/13/2014 11:54:01  
+10/13/2014 11:54:07 AM - [Info] It is off-peak hours. Starting to scale down RD session hosts...  
+10/13/2014 11:54:07 AM - [Info] Processing collection Fjernskrivebord  
+10/13/2014 11:54:51 AM - [Info] Counting the current sessions on the host...  
+10/13/2014 11:56:51 AM - [Info] Force users to log off...  
+10/13/2014 11:58:10 AM - [Info] Waiting for Azure VM to stop &lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token tag&quot;&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;lt;&lt;/span&gt;session&lt;/span&gt; &lt;span class=&quot;token attr-name&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt; ...  
+10/13/2014 11:58:28 AM - [Info] End RDS Scale Optimization.  
+`&lt;/pre&gt;
+RDSUsage.log
+&lt;pre class=&quot; language-markup&quot;&gt;`10/13/2014 12:06:31 PM, Fjernskrivebord, 0, 0  
+</code></pre><p>And we can see a VM turned off in the Azure Portal<br><a href="/images/2015/02/13.png"><img src="/images/2015/02/13.png" alt="13"></a></p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>The script works as promissed and once the issues were fixed it was not that hard to get working. One thing i would like to see, is scaling down inside office hours, as it is now it will only scale down once its off-hours.</p>
+<p>I hope you could use this guide, feel free to ask questions below.</p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/klugjo/hexo-theme-clean-blog" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2016 Martin Hannemann<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>

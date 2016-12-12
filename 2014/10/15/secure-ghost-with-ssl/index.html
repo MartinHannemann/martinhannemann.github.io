@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="NOTICE - This blog is no longer running Ghost
+As you might have discovered this blog runs Ghost which is a simple blogging tool, that focuses on writing and content, not flashy extensions or mods you can get lost in.
+To improve my google search ranking and to add some security, i wanted to add SSL to the site, couldn’t find a single guide, so i decided to make one.">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="Martin Hannemann">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Secure Ghost with SSL"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="rtin.hm"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Secure Ghost with SSL - rtin.hm</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+    <!-- favicon -->
+    
+	
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">rtin.hm</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            
+                                Home
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/archives">
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="https://github.com/klugjo/hexo-theme-clean-blog">
+                            
+                                <i class="fa fa-github fa-stack-2x"></i>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('http://www.codeblocq.com/assets/projects/hexo-theme-clean-blog/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Secure Ghost with SSL</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2014-10-15
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+                <div class="col-lg-4 col-lg-offset-2 col-md-5 col-md-offset-1 post-tags">
+                    
+                        
+
+<a href="/categories/Ghost/">Ghost</a>
+
+                    
+                </div>
+                <div class="col-lg-4 col-md-5 post-categories">
+                    
+                </div>
+            
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p><strong>NOTICE - This blog is no longer running Ghost</strong></p>
+<p>As you might have discovered this blog runs Ghost which is a simple blogging tool, that focuses on writing and content, not flashy extensions or mods you can get lost in.</p>
+<p>To improve my google search ranking and to add some security, i wanted to add SSL to the site, couldn’t find a single guide, so i decided to make one.</p>
+<a id="more"></a>
+<p><strong>Create SSL certificate with SmartSSL</strong></p>
+<p>First log into your server with SSH, and create a SSL folder to hold your cetificates.</p>
+<p><pre class="lang:sh decode:true ">mkdir /etc/nginx/ssl<br>cd /etc/nginx/ssl</pre><br>Next create a csr with openssl and input the info the guide asks for, extra attributes can be ignored.</p>
+<p><pre class="lang:sh decode:true ">openssl req -new -days 365 -nodes -keyout DOMAIN.key -out DOMAIN.csr</pre><br>Secure your key, and copy the content of DOMAIN.csr to your clipholder</p>
+<p><pre class="lang:sh decode:true ">chmod 400 DOMAIN.key<br>nano DOMAIN.csr</pre><br>I use SmartSSL to sign my certificates, because it free and secure enough for me. Once you have validated your domain with thier service you are free to create certificates. Select Certification Wizard and create a Web Server SSL/TLS certificate</p>
+<p><a href="/images/2015/02/15.png"><img src="/images/2015/02/15.png" alt="1"></a></p>
+<p>Since we have created the CSR on the server we need to skip this step. I have yet not been able to get it working by using the Generate Private Key guide.</p>
+<p><a href="/images/2015/02/22.png"><img src="/images/2015/02/22.png" alt="2"></a></p>
+<p>The DOMAIN.csr content you copied needs to be pasted into here.</p>
+<p><a href="/images/2015/02/32.png"><img src="/images/2015/02/32.png" alt="3"></a></p>
+<p>If you have done everything correctly you will se this</p>
+<p><a href="/images/2015/02/42.png"><img src="/images/2015/02/42.png" alt="4"></a></p>
+<p>Select the domain you want the certificate for</p>
+<p><a href="/images/2015/02/52.png"><img src="/images/2015/02/52.png" alt="5"></a></p>
+<p>I choose WWW as the subdomain</p>
+<p><a href="/images/2015/02/62.png"><img src="/images/2015/02/62.png" alt="6"></a></p>
+<p>Now you get the CRT that you need to copy to a file named ssl.crt on you server</p>
+<p><pre class="lang:sh decode:true">nano ssl.crt</pre><br>Now we are done with creating the certificate and we only need to configure nginx and Ghost to use it.</p>
+<p><strong>Configuring nginx and Ghost to use SSL</strong></p>
+<p>For my setup, i dont want SSL to be default for my site, but mandatory if you access the admin area.</p>
+<p>First we need to setup nginx for ssl. Locate your sites nginx config, likely under</p>
+<p><pre class="lang:sh decode:true">/etc/nginx/sites-enabled/</pre><br>it will look something like this</p>
+<p><pre class="lang:sh decode:true">server {<br>    listen 80 default_server;<br>    listen [::]:80 default_server ipv6only=on;</pre></p>
+<pre><code>server_name DOMAIN; # Replace with your domain
+
+root /usr/share/nginx/html;
+index index.html index.htm;
+
+client_max_body_size 10G;
+
+location / {
+    proxy_pass http://localhost:2368;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_buffering off;
+}
+</code></pre><p>}<br>&nbsp;</p>
+<p>Add the SSL config</p>
+<p><pre class="lang:sh decode:true">server {<br>    listen 80 default_server;<br>    listen 443 ssl; # SSL Port to listen on<br>    listen [::]:80 default_server ipv6only=on;</pre></p>
+<pre><code>server_name DOMAIN; # Replace with your domain
+
+ssl_certificate /etc/nginx/ssl/ssl.crt; # Path to CRT file
+ssl_certificate_key /etc/nginx/ssl/DOMAIN.key; # Path to key file
+
+root /usr/share/nginx/html;
+index index.html index.htm;
+
+client_max_body_size 10G;
+
+location / {
+    proxy_pass http://localhost:2368;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_buffering off;
+}
+</code></pre><p>}<br>&nbsp;</p>
+<p>Stop and start nginx for the config to take effect</p>
+<p><pre class="lang:sh decode:true ">service nginx stop<br>service nginx start</pre><br>&nbsp;</p>
+<p>Take a look at your site to see if its still online, and see what happens when you add https to the site.</p>
+<p><a href="/images/2015/02/72.png"><img src="/images/2015/02/72.png" alt="7"></a></p>
+<p><em>Wuhuu</em>, we are online with https, now lets use it for something. You could go ahead and force SSL on all connections, but i just want to use it for the Ghost admin area.</p>
+<p>Locate your ghost config.js, likely under <em>/var/www/ghost</em> and navigate to the Production part</p>
+<p><pre class="lang:sh decode:true">    // ### Production<br>    // When running Ghost in the wild, use the production environment<br>    // Configure your URL and mail settings here<br>    production: {<br>        url: ‘<a href="http://martinhannemann.com" target="_blank" rel="external">http://martinhannemann.com</a>‘,</pre><br>and add <code>forceAdminSSL: true,</code></p>
+<p><pre class="lang:sh decode:true ">   // ### Production<br>    // When running Ghost in the wild, use the production environment<br>    // Configure your URL and mail settings here<br>    production: {<br>        url: ‘<a href="http://martinhannemann.com" target="_blank" rel="external">http://martinhannemann.com</a>‘,<br>        forceAdminSSL: true,</pre><br>&nbsp;</p>
+<p>Restart all related services</p>
+<p><pre class="lang:sh decode:true ">service nginx stop<br>service nginx start<br>service ghost restart</pre><br>&nbsp;</p>
+<p>Now if you try to enter the Ghost Admin you will be redirected to the secure version.</p>
+<p><a href="/images/2015/02/82.png"><img src="/images/2015/02/82.png" alt="8"></a></p>
+<p>I hope this was helpfull, if you have any questions or comments write below.</p>
+<p><strong>Credits</strong></p>
+<p><a href="https://www.linode.com/docs/security/ssl/ssl-certificates-with-nginx" target="_blank" rel="external">SSL Certificates with Nginx</a></p>
+<p><a href="http://www.allaboutghost.com/protecting-the-ghost-login-page-with-a-free-ssl-certificate/" target="_blank" rel="external">Protecting the Ghost Login Page With a Free SSL Certificate</a></p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+                        <li>
+                            <a href="https://github.com/klugjo/hexo-theme-clean-blog" target="_blank">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">&copy; 2016 Martin Hannemann<br></p>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
